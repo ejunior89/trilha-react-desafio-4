@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import Button from "../../components/Button";
 import Input from "../../components/Input";
@@ -12,7 +13,7 @@ const schema = yup
     email: yup.string().email("E-mail inválido").required("Campo obrigatório"),
     password: yup
       .string()
-      .min(6, "No minimo 6 caracteres")
+      .min(6, "No mínimo 6 caracteres")
       .required("Campo obrigatório"),
   })
   .required();
@@ -28,6 +29,19 @@ const Login = () => {
     reValidateMode: "onChange",
   });
 
+  const [emailValue, setEmailValue] = useState("");
+  const [passwordValue, setPasswordValue] = useState("");
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmailValue(e.target.value);
+    console.log("Email mudou para: " + e.target.value);
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPasswordValue(e.target.value);
+    console.log("Senha mudou para: " + e.target.value);
+  };
+
   return (
     <Container>
       <LoginContainer>
@@ -38,6 +52,8 @@ const Login = () => {
             name="email"
             placeholder="Email"
             control={control}
+            value={emailValue}
+            onChange={handleEmailChange}
             errorMessage={errors?.email?.message}
           />
           <Spacing />
@@ -46,10 +62,23 @@ const Login = () => {
             type="password"
             placeholder="Senha"
             control={control}
+            value={passwordValue}
+            onChange={handlePasswordChange}
             errorMessage={errors?.password?.message}
           />
           <Spacing />
-          <Button title="Entrar" />
+          <Button
+  title="Entrar"
+  disabled={!isValid}
+  onClick={() => {
+    if (isValid) {
+      console.log('Dados válidos:', emailValue, passwordValue);
+    } else {
+      console.log('Dados inválidos');
+    }
+  }}
+/>
+
         </Column>
       </LoginContainer>
     </Container>
